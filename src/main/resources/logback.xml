@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 콘솔 출력 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>LOGBACK : [%d{yyyy/MM/dd HH:mm:ss}] %highlight(%-5level)| %cyan(%-25.25logger{0}) | [[[ %msg ]]]%n
+            </pattern>
+        </encoder>
+    </appender>
+    <!-- Root 로거 설정 -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+
+</configuration>

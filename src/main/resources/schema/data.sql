@@ -1,0 +1,1 @@
+INSERT INTO member(email,password,name,phone,birth,joinDate,type) values ('test@gmail.com','test','testname','010-1234-5678','1999-01-01','2024-03-13',0)
