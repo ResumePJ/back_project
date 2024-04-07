@@ -34,6 +34,20 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 
+	//시큐리티
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.google.code.gson:gson:2.8.9'
+
+	// jjwt 라이브러리 추가
+//	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'  // API 의존성 추가
+//	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5' // 구현 의존성 추가
+//	runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.11.5') { exclude group: 'org.json', module: 'json' } // JSON 처리 의존성 추가
+
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+	
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
