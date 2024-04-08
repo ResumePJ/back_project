@@ -1,18 +1,16 @@
-package com.resume.resu.controller;
+package com.resume.resu.controller.login;
 
-import com.resume.resu.service.api.LoginService;
+import com.resume.resu.service.api.login.LoginService;
 import com.resume.resu.util.JwtUtils;
 import com.resume.resu.vo.request.EmailLoginRequestDto;
-import com.resume.resu.vo.response.JwtResponse;
 import com.resume.resu.vo.response.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,10 +33,15 @@ public class LoginController {
         if(member!= null){
             log.info("emailLogin response member : {}",member );
 
-            String jwt = jwtUtils.createAccessToken(member.getEmail(),member.getPassword());
+            String jwt = jwtUtils.createAccessToken(member.getEmail(),member.getName(),member.getMemberNo());
             log.info("jwt : {}",jwt);
 
-            return ResponseEntity.ok(new JwtResponse(jwt));
+
+            // resonse body에 담아서 보내는 방법
+               return ResponseEntity.ok(jwt);
+
+            // response header에 담아서 보내는 방법
+            // return ResponseEntity.ok().header("Authorization","Bearer "+jwt).build();
 
         }else{
             log.info("emailLogin response member is null");

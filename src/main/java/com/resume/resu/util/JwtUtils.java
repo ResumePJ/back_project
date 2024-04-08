@@ -22,17 +22,20 @@ import java.util.Date;
 @Slf4j
 public class JwtUtils {
 
-    // JwtUtils 클래스에 대한 로거 생성
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    /*
+    *  TODO : 비밀키를 변수에 담아서 서버에 저장해두고 있어서 서버 재부팅 시에 서버 재부팅 전 토큰을 그대로 사용 못하는듯? 서명 인증이 안되니까
+    *   => 이거 해결할 방법 찾아야 해
+    *
+    *  TODO : refresh token도 생성하고 관련 메서드 작성해 사용해 볼 것*/
 
-    // JJWT 라이브러리의 API 사용해 HS256(HMAC SHA-256) 알고리즘을 사용하는 비밀 키 생성
+    // JJWT 라이브러리의 API 사용해 HS256(HMAC SHA-256) 알고리즘을 사용하는 비밀 키 생성 (매번 새로운 무작위 키 값을 생성)
     private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     //access token 유지 시간 선언 (밀리초) - 6시간
 //    public static final long ACCESS_TOKEN_VALIDATION_SECOND = 1;
     public static final long ACCESS_TOKEN_VALIDATION_SECOND = 1000 * 60 * 60 * 6;
     // access 토큰 생성
-    public String createAccessToken(String email, String name) {
+    public String createAccessToken(String email, String name, int memberNo) {
 
         // 토큰 만료 시간 선언 해둔 것 가져와 설정
         // 만료 시간 = 현재 시간 + 선언 해둔 밀리 초
@@ -44,6 +47,7 @@ public class JwtUtils {
         return Jwts.builder() // 해당 팩토리 클래스가 빌더 패턴을 구현. 빌더 객체 가져옴
                 .setSubject(email) // 토큰에 대한 소유자 식별 역할
                 .claim("name", name) // 토큰에 담길 사용자의 추가 정보 (JSON 형식 등 사용)
+                .claim("memberNo", memberNo)
                 .setIssuedAt(now) // 토큰이 발급된 시간
                 .setExpiration(expiration) // 토큰의 만료 시간을 설정
                 .signWith(secretKey) //서명
@@ -60,8 +64,10 @@ public class JwtUtils {
                parseClaimJws(token) : 주어진 토큰 파싱, 서명 검증
                 - JWT의 서명이 유효 => JWT의 클레임 반환
                 - JWT의 서명이 유효하지 않으면 => SignatureException 발생
+
             */
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token); //Jws 반환
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+
             return true; // 예외가 발생하지 않음. 토큰 파싱 중 문제가 발생하지 않고 마무리 됨
         } catch (SignatureException e) {
             log.info("서명이 잘못 됨");
@@ -79,13 +85,17 @@ public class JwtUtils {
 
     // 토큰에서 email 추출해 반환
     // setSubject로 email을 jwt에 설정했기 때문에
-    public String getId(String token) {
+    public String getEmail(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     // 토큰에서 name 추출해 반환
     public String getName(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("name").toString();
+    }
+
+    public int getMemberNo(String token) {
+        return Integer.parseInt(Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("memberNo").toString());
     }
 
     //HttpServletRequest에서 Authorization Header를 통해 access token 추출 - (request header에서 Authorization header를 읽어와 access token 추출)

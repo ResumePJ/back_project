@@ -1,4 +1,4 @@
-package com.resume.resu.repository;
+package com.resume.resu.repository.login;
 
 import com.resume.resu.vo.request.EmailLoginRequestDto;
 import com.resume.resu.vo.response.MemberDTO;

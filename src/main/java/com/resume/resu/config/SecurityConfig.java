@@ -1,7 +1,7 @@
 package com.resume.resu.config;
 
 
-import com.resume.resu.service.impl.LoginServiceImpl;
+import com.resume.resu.service.impl.login.LoginServiceImpl;
 import com.resume.resu.util.JwtUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

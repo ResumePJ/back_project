@@ -1,7 +1,7 @@
-package com.resume.resu.service.impl;
+package com.resume.resu.service.impl.login;
 
-import com.resume.resu.repository.LoginMapper;
-import com.resume.resu.service.api.LoginService;
+import com.resume.resu.repository.login.LoginMapper;
+import com.resume.resu.service.api.login.LoginService;
 import com.resume.resu.vo.request.EmailLoginRequestDto;
 import com.resume.resu.vo.response.MemberDTO;
 import lombok.RequiredArgsConstructor;
