@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface LoginMapper {
 
-    @Select("SELECT * FROM MEMBER WHERE EMAIL = #{emailLoginRequestDto.email} AND password=#{emailLoginRequestDto.password}")
+    @Select("SELECT * FROM resudb.MEMBER WHERE EMAIL = #{emailLoginRequestDto.email} AND password=#{emailLoginRequestDto.password}")
     MemberDTO findMemberInfoByEmail(@Param("emailLoginRequestDto") EmailLoginRequestDto emailLoginRequestDto);
 
 }

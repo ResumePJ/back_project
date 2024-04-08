@@ -28,7 +28,7 @@ public class LoginController {
 
     // ? 때문에 어떤 타입도 응답으로 설정 가능
     @PostMapping("/login/email")
-    public ResponseEntity<?> emailLogin(@RequestBody EmailLoginRequestDto emailLoginRequestDto){
+    public ResponseEntity<?> emailLogin(@ModelAttribute EmailLoginRequestDto emailLoginRequestDto){
 
         MemberDTO member = loginService.checkForLogin(emailLoginRequestDto);
 

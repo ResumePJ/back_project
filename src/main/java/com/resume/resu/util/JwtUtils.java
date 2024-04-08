@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.Date;
 
 
 @Component
+@Slf4j
 public class JwtUtils {
 
     // JwtUtils 클래스에 대한 로거 생성
@@ -27,8 +29,8 @@ public class JwtUtils {
     private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     //access token 유지 시간 선언 (밀리초) - 6시간
+//    public static final long ACCESS_TOKEN_VALIDATION_SECOND = 1;
     public static final long ACCESS_TOKEN_VALIDATION_SECOND = 1000 * 60 * 60 * 6;
-
     // access 토큰 생성
     public String createAccessToken(String email, String name) {
 
@@ -62,11 +64,13 @@ public class JwtUtils {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token); //Jws 반환
             return true; // 예외가 발생하지 않음. 토큰 파싱 중 문제가 발생하지 않고 마무리 됨
         } catch (SignatureException e) {
-            System.out.println("서명이 잘못 됨");
+            log.info("서명이 잘못 됨");
         } catch (ExpiredJwtException e) {
-            System.out.println("토큰 만료");
+            log.info("토큰 만료");
+            /* TODO : 토큰 만료시 처리 코드 추가할 것*/
+
         } catch (IllegalArgumentException | MalformedJwtException e) {
-            System.out.println("토큰이 올바르게 구성되지 않음");
+            log.info("올바르지 못한 토큰");
         }
 
         //catch 문 실행 시, return false 반드시 실행됨
