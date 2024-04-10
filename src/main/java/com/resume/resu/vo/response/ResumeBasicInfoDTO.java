@@ -11,7 +11,7 @@ public class ResumeBasicInfoDTO {
     public int resumeNo;
     public int memberNo;
 
-    //tinyint(1) 타입
+    //tinyint(1) 타입 - 구직 유형
     public int type;
 
     public String name;
@@ -23,7 +23,7 @@ public class ResumeBasicInfoDTO {
 
     public String phone;
     public String address;
-    public String photo;
+//    public String photo;
     public String intro;
     public String resumeTitle;
     public boolean basic;

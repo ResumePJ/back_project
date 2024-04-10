@@ -2,6 +2,7 @@ package com.resume.resu.controller.resume;
 
 import com.resume.resu.service.api.resume.BasicInfoService;
 import com.resume.resu.util.JwtUtils;
+import com.resume.resu.vo.request.ResumeBasicInfoRequestDTO;
 import com.resume.resu.vo.response.MemberDTO;
 import com.resume.resu.vo.response.ResumeBasicInfoDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -24,7 +23,7 @@ public class BasicInfoController {
     @GetMapping("/resume/basic/{resumeNo}")
     public ResponseEntity<ResumeBasicInfoDTO> getResumeBasicInfo(@PathVariable("resumeNo") int resumeNo, HttpServletRequest req){
 
-        //TODO : 본인이 만든 이력서가 맞는지 확인 후, 이력서 내용 반환
+        // 본인이 만든 이력서가 맞는지 확인 후, 이력서 내용 반환
 
         String accessToken=jwtUtils.getAcceessToken(req);
         int memberNo = jwtUtils.getMemberNo(accessToken);
@@ -45,6 +44,33 @@ public class BasicInfoController {
             return ResponseEntity.ok(resumeBasicInfoDTO);
         }
     }
+
+    // form 전송 방식
+    @PostMapping("/resume/basic")
+    public ResponseEntity<Integer> addResumeBasicInfo(@ModelAttribute ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, HttpServletRequest req){
+
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 해당 해원정보 가져옴
+        MemberDTO memberInfo = basicInfoService.getMemberInfo(memberNo);
+
+        // 기본 정보 삽입
+        int insertResumeBasicInfo = basicInfoService.insertResumeBasicInfo(resumeBasicInfoRequestDTO,memberInfo);
+
+        if(insertResumeBasicInfo!=1){
+            log.info("정상적으로 삽입되지 않았습니다.");
+            return ResponseEntity.badRequest().build();
+        }else{
+            int resumeNo = basicInfoService.findLastResumeNoById(memberNo);
+            return ResponseEntity.ok(resumeNo);
+        }
+
+    }
+
+
 
 
 

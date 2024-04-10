@@ -2,6 +2,7 @@ package com.resume.resu.service.impl.resume;
 
 import com.resume.resu.repository.resume.BasicInfoMapper;
 import com.resume.resu.service.api.resume.BasicInfoService;
+import com.resume.resu.vo.request.ResumeBasicInfoRequestDTO;
 import com.resume.resu.vo.response.MemberDTO;
 import com.resume.resu.vo.response.ResumeBasicInfoDTO;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,20 @@ public class BasicInfoServiceImpl implements BasicInfoService {
         return basicInfoMapper.getResumeBasicInfo(resumeNo);
     }
 
+    @Override
+    public MemberDTO getMemberInfo(int memberNo) {
+        return basicInfoMapper.getMemberInfo(memberNo);
+    }
+
+    @Override
+    public int insertResumeBasicInfo(ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, MemberDTO memberInfo) {
+        return basicInfoMapper.insertResumeBasicInfo(resumeBasicInfoRequestDTO,memberInfo);
+    }
+
+    @Override
+    public int findLastResumeNoById(int memberNo) {
+        return basicInfoMapper.findLastResumeNoById(memberNo);
+    }
 
 
 }

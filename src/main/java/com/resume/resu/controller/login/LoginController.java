@@ -25,6 +25,7 @@ public class LoginController {
     private final JwtUtils jwtUtils;
 
     // ? 때문에 어떤 타입도 응답으로 설정 가능
+    // form 로그인
     @PostMapping("/login/email")
     public ResponseEntity<?> emailLogin(@ModelAttribute EmailLoginRequestDto emailLoginRequestDto){
 
