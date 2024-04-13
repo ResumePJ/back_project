@@ -44,14 +44,12 @@ create table if not exists resume(
 
 );
 
-## 추가
-create table if not exists image (
-                                    file_id bigint  not null primary key auto_increment,
-                                    identifier int not null,
-                                    file_name varchar(255) not null,
-                                    uuid  varchar(255)  not null,
-                                    upload_date datetime default (now()) not null,
-                                    foreign key (identifier) references member(memberNo) on delete cascade
+create table if not exists image(
+                                    fileId bigint  not null primary key auto_increment,
+                                    resumeNo int not null,
+                                    fileName varchar(255) not null,
+                                    uploadDate datetime default (now()) not null,
+                                    foreign key (resumeNo) references resume(resumeNo) on delete cascade
 );
 
 

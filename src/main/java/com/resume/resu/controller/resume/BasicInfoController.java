@@ -2,8 +2,10 @@ package com.resume.resu.controller.resume;
 
 import com.resume.resu.service.api.resume.BasicInfoService;
 import com.resume.resu.util.JwtUtils;
+import com.resume.resu.vo.request.MultipartUploadRequestDto;
 import com.resume.resu.vo.request.ResumeBasicInfoRequestDTO;
 import com.resume.resu.vo.response.MemberDTO;
+import com.resume.resu.vo.response.MultipartUploadResponseDto;
 import com.resume.resu.vo.response.ResumeBasicInfoDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,7 @@ public class BasicInfoController {
         // 요청 헤더의 토큰에서 memberNo 가져옴
         int memberNo = jwtUtils.getMemberNo(accessToken);
 
-        // 해당 해원정보 가져옴
+        // 해당 회원정보 가져옴
         MemberDTO memberInfo = basicInfoService.getMemberInfo(memberNo);
 
         // 기본 정보 삽입
@@ -70,6 +72,25 @@ public class BasicInfoController {
 
     }
 
+    // form 형식으로 이미지 업로드
+    @PostMapping("/resume/basic/upload/photo")
+    public ResponseEntity<Integer> uploadResumePhoto(@ModelAttribute MultipartUploadRequestDto dto,HttpServletRequest req){
+
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(basicInfoService.isMyResume(memberNo,dto.getResumeNo())){
+            MultipartUploadResponseDto result = basicInfoService.uploadFile(dto);
+
+            //postman에는 result.getFileId()가 출력됨
+            return ResponseEntity.ok(result.getFileId());
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
 
 

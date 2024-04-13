@@ -1,12 +1,13 @@
 package com.resume.resu.repository.resume;
 
+import com.resume.resu.vo.request.MultipartUploadRequestDto;
 import com.resume.resu.vo.request.ResumeBasicInfoRequestDTO;
 import com.resume.resu.vo.response.MemberDTO;
+import com.resume.resu.vo.response.MultipartUploadResponseDto;
 import com.resume.resu.vo.response.ResumeBasicInfoDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.time.LocalDateTime;
 
 @Mapper
 public interface BasicInfoMapper {
@@ -25,4 +26,12 @@ public interface BasicInfoMapper {
 
     @Select("select resumeNo from resudb.resume where memberNo=#{memberNo} order by resumeNo desc limit 1")
     int findLastResumeNoById(@Param("memberNo")int memberNo);
+
+    @Insert("insert into image(resumeNo,fileName,uploadDate) values (#{dto.resumeNo},#{filename},now())")
+    @Options(useGeneratedKeys = true, keyProperty = "dto.fileId")
+    Integer upload(@Param("dto")MultipartUploadRequestDto dto, @Param("filename") String filename);
+
+    // 가장 최신 데이터만 가져오도록 함.
+    @Select("select fileId,resumeNo,fileName,uploadDate from image where fileId=#{generatedFileId} order by fileId desc limit 1")
+    MultipartUploadResponseDto findByFileId(int generatedFileId);
 }
