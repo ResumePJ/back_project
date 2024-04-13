@@ -8,11 +8,20 @@ import com.resume.resu.vo.response.MemberDTO;
 import com.resume.resu.vo.response.MultipartUploadResponseDto;
 import com.resume.resu.vo.response.ResumeBasicInfoDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.print.attribute.standard.Media;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @Slf4j
@@ -91,6 +100,37 @@ public class BasicInfoController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    // 가장 최근에 업로드한 사진이 다운로드됨 (사진은 하나만 다운로드되니까)
+    @GetMapping("/resume/basic/download/photo/{resumeNo}")
+    public ResponseEntity<Resource>downloadResumePhoto(@PathVariable(name="resumeNo")int resumeNo, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(basicInfoService.isMyResume(memberNo,resumeNo)){
+            Resource file = basicInfoService.download(resumeNo);
+
+            // 프론트엔드에서 무조건 사진은 업로드 하도록 할 것임
+            // DB에 사진이 존재한다면?
+            if(file !=null){
+                log.info("사진이 있음");
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(file.getFilename(), StandardCharsets.UTF_8) + "\"").body(file);
+            }
+            // DB에 사진이 없다면?
+            else{
+                log.info("사진이 없음");
+                return ResponseEntity.notFound().build();
+            }
+        }
+        // 내가 작성한 이력서가 아니면?
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
 
 
 

@@ -34,4 +34,8 @@ public interface BasicInfoMapper {
     // 가장 최신 데이터만 가져오도록 함.
     @Select("select fileId,resumeNo,fileName,uploadDate from image where fileId=#{generatedFileId} order by fileId desc limit 1")
     MultipartUploadResponseDto findByFileId(int generatedFileId);
+
+    // 이력서의 가장 최근에 업로드한 사진 정보 가져옴
+    @Select("select fileId,resumeNo,fileName,uploadDate from image where resumeNo=#{resumeNo} order by fileId desc limit 1")
+    MultipartUploadResponseDto findImageByResumeNo(int resumeNo);
 }

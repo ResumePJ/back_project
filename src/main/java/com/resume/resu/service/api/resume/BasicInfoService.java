@@ -5,6 +5,7 @@ import com.resume.resu.vo.request.ResumeBasicInfoRequestDTO;
 import com.resume.resu.vo.response.MemberDTO;
 import com.resume.resu.vo.response.MultipartUploadResponseDto;
 import com.resume.resu.vo.response.ResumeBasicInfoDTO;
+import org.springframework.core.io.Resource;
 
 public interface BasicInfoService {
 
@@ -20,4 +21,5 @@ public interface BasicInfoService {
 
     MultipartUploadResponseDto uploadFile(MultipartUploadRequestDto dto);
 
+    Resource download(int resumeNo);
 }

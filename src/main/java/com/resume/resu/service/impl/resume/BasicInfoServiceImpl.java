@@ -10,6 +10,8 @@ import com.resume.resu.vo.response.ResumeBasicInfoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -102,11 +105,36 @@ public class BasicInfoServiceImpl implements BasicInfoService {
         return result;
     }
 
+    @Override
+    public Resource download(int resumeNo) {
+        String filePath = uploadPath+"\\";
+        // 사진 이름 가져옴
+        MultipartUploadResponseDto image = basicInfoMapper.findImageByResumeNo(resumeNo);
+        String fileName = image.getFileName();
+        log.info("fileName : {}",fileName);
+
+        try{
+            // 사진의 주소 가져옴
+            // 실제 파일 시스템의 경로로 표준화 (normalize())
+            Path path = Paths.get(filePath+fileName).normalize();
+            log.info("file Path {}",path);
+            Resource resource = new UrlResource(path.toUri());
+            if(resource.exists()){
+                return resource;
+            } else{
+                return null;
+            }
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
     private String generateUniqueFileName(String originalFileName){
         //중복 될 가능성이 거의 없는 고유 식별자인 uuid 생성
         UUID uuid = UUID.randomUUID();
 
-        /* TODO : 추후 확장자에 대해 처리 하기 위해, 파일이름/확장자를 나누어 관리함*/
+        /* TODO : 추후 확장자에 대해 처리 하기 위해, 파일이름/확장자를 나누어 관리함 - png만 업로드 할 수 있도록 수정 할 것*/
 
         /* .이 마지막으로 존재하는 곳의 인덱스
         * 찾는 문자가 없는 경우 -1 반환
