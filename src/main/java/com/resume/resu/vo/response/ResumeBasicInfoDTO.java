@@ -8,24 +8,25 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class ResumeBasicInfoDTO {
-    public int resumeNo;
-    public int memberNo;
+    private int resumeNo;
+    private int memberNo;
 
     //tinyint(1) 타입 - 구직 유형
-    public int type;
+    private int type;
 
-    public String name;
+    private String name;
 
     /* TODO :  타입 수정 해야 할 지도? - tinyint(1) 타입*/
-    public boolean gender;
+    private boolean gender;
 
-    public LocalDate birth;
+    private LocalDate birth;
 
-    public String phone;
-    public String address;
-//    public String photo;
-    public String intro;
-    public String resumeTitle;
-    public boolean basic;
+    private String phone;
+    private String address;
+
+    private String intro;
+    private String resumeTitle;
+    private boolean basic;
+
 
 }

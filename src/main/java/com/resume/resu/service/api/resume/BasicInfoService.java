@@ -22,4 +22,6 @@ public interface BasicInfoService {
     MultipartUploadResponseDto uploadFile(MultipartUploadRequestDto dto);
 
     Resource download(int resumeNo);
+
+    ResumeBasicInfoDTO updateResumeBasicInfo(int resumeNo,ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO);
 }

@@ -130,6 +130,21 @@ public class BasicInfoServiceImpl implements BasicInfoService {
 
     }
 
+    @Override
+    public ResumeBasicInfoDTO updateResumeBasicInfo(int resumeNo, ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO) {
+        int updateInfo= basicInfoMapper.updateResumeBasicInfo(resumeNo,resumeBasicInfoRequestDTO);
+
+        // 한행에 대해 업데이트 성공 했다면?
+        if(updateInfo==1){
+            return basicInfoMapper.getResumeBasicInfo(resumeNo);
+        }
+
+        // 한행에 대해 업데이트를 하지 않았다면?
+        else{
+            return null;
+        }
+    }
+
     private String generateUniqueFileName(String originalFileName){
         //중복 될 가능성이 거의 없는 고유 식별자인 uuid 생성
         UUID uuid = UUID.randomUUID();

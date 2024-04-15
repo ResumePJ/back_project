@@ -132,6 +132,34 @@ public class BasicInfoController {
     }
 
 
+    @PostMapping("/resume/basic/update/{resumeNo}")
+    public ResponseEntity<ResumeBasicInfoDTO> updateResumeBasicInfo(@PathVariable(name="resumeNo")int resumeNo,@ModelAttribute ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(basicInfoService.isMyResume(memberNo,resumeNo)){
+            ResumeBasicInfoDTO updateInfo = basicInfoService.updateResumeBasicInfo(resumeNo,resumeBasicInfoRequestDTO);
+
+            // 정상적으로 한 행에 대해 업데이트 했다면?
+            if(updateInfo!=null){
+                return ResponseEntity.ok(updateInfo);
+            }
+
+            // 한 행에 대해 업데이트 실패 시?
+            else{
+                log.info("이력서 기본 내용 수정 중 오류 발생");
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        // 내가 작성한 이력서가 아니면?
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+    }
 
 
 

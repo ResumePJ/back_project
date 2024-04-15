@@ -38,4 +38,7 @@ public interface BasicInfoMapper {
     // 이력서의 가장 최근에 업로드한 사진 정보 가져옴
     @Select("select fileId,resumeNo,fileName,uploadDate from image where resumeNo=#{resumeNo} order by fileId desc limit 1")
     MultipartUploadResponseDto findImageByResumeNo(int resumeNo);
+
+    @Update("update resume set name=#{resumeBasicInfoRequestDTO.name}, gender=#{resumeBasicInfoRequestDTO.gender}, phone=#{resumeBasicInfoRequestDTO.phone},address=#{resumeBasicInfoRequestDTO.address}, intro=#{resumeBasicInfoRequestDTO.intro}, type=#{resumeBasicInfoRequestDTO.type} where resumeNo=#{resumeNo}")
+    int updateResumeBasicInfo(@Param("resumeNo") int resumeNo, @Param("resumeBasicInfoRequestDTO") ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO);
 }

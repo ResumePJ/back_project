@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ResumeBasicInfoRequestDTO {
-    public String name;
-    public boolean gender;
-    public String phone;
-    public String address;
-    public String intro;
+    private String name;
+    private boolean gender;
+    private String phone;
+    private String address;
+    private String intro;
 
     //구직 유형
-    public boolean type;
+    private boolean type;
 }
