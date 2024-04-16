@@ -51,4 +51,13 @@ public class ExperienceServiceImpl implements ExperienceService {
         }
     }
 
+    @Override
+    public ExperienceResponseDto updateExperience(ExperienceRequestDto experienceRequestDto) {
+        experienceMapper.updateExperience(experienceRequestDto);
+
+        ExperienceResponseDto result = experienceMapper.findExperienceByExNo(experienceRequestDto.getExNo());
+
+        return result;
     }
+
+}

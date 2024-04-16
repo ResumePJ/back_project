@@ -15,4 +15,7 @@ public interface ExperienceMapper {
 
     @Select("select * from experience where exNo=#{exNo}")
     ExperienceResponseDto findExperienceByExNo(int exNo);
+
+    @Update("update experience set exStartDate=#{experienceRequestDto.exStartDate},exEndDate=#{experienceRequestDto.exEndDate},exName=#{experienceRequestDto.exName},exDetail=#{experienceRequestDto.exDetail} where exNo=#{experienceRequestDto.exNo}")
+    int updateExperience(@Param("experienceRequestDto") ExperienceRequestDto experienceRequestDto);
 }

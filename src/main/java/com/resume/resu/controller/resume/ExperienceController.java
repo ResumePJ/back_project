@@ -33,6 +33,7 @@ public class ExperienceController {
     //경험 추가
     //하나의 이력서에 대해 여러개의 경험 추가 가능
     // JSON 형식의 List<ExperienceRequestDto> getListDto 데이터를 받아야함 !
+    // exNo는 받아오지 않음. 자동으로 생성됨 (auto_increment)
     @PostMapping ("/resume/experience/{resumeNo}")
     public ResponseEntity<List<ExperienceResponseDto>> addExperience(@PathVariable(name="resumeNo")int resumeNo, @RequestBody List<ExperienceRequestDto> getListDto, HttpServletRequest req){
         String accessToken=jwtUtils.getAcceessToken(req);
@@ -58,6 +59,29 @@ public class ExperienceController {
         else{
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
+
+    // 경험 수정
+    // 하나의 경험에 대한 정보를 가져와, 해당 경험을 수정, 수정한 경험 하나만 반환
+    // exNo까지 Dto에 받아와야함!
+    /* TODO : 프론트엔드 작업하면서 수정해야할 경우, 수정 할 것*/
+    @PostMapping("/resume/experience/update/{resumeNo}")
+    public ResponseEntity<ExperienceResponseDto> updateExperience(@PathVariable(name="resumeNo") int resumeNo,@ModelAttribute ExperienceRequestDto experienceRequestDto, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(experienceService.isMyResume(memberNo,resumeNo)){
+            ExperienceResponseDto result = experienceService.updateExperience(experienceRequestDto);
+            return ResponseEntity.ok(result);
+        }
+        // 내가 작성한 이력서가 아니면?
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
     }
 
 }
