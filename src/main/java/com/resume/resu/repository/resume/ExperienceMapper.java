@@ -32,4 +32,7 @@ public interface ExperienceMapper {
 
     @Select("select count(*) from experience where exNo=#{exNo}")
     int isEx(int exNo);
+
+    @Select("select * from experience where exNo=#{exNo}")
+    ExperienceResponseDto getOneExperience(int exNo);
 }

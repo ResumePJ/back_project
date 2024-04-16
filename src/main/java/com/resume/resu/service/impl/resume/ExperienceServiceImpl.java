@@ -92,4 +92,9 @@ public class ExperienceServiceImpl implements ExperienceService {
         return false;
     }
 
+    @Override
+    public ExperienceResponseDto getOneExperience(int exNo) {
+        return experienceMapper.getOneExperience(exNo);
+    }
+
 }

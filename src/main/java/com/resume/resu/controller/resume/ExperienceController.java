@@ -81,7 +81,7 @@ public class ExperienceController {
                 return ResponseEntity.ok(result);
             }
             else {
-                // 내 이력서는 맞지만, 해당 이력서의 경험이 아님
+                // 내 경험은 맞지만, 해당 이력서의 경험이 아님
                 if(experienceService.isMyEx(experienceRequestDto.getExNo(),memberNo)){
                     return ResponseEntity.badRequest().build();
                 }
@@ -128,6 +128,40 @@ public class ExperienceController {
         }
     }
 
+    //하나의 경험 조회
+    @GetMapping("/resume/experience/one/{resumeNo}/{exNo}")
+    public ResponseEntity<ExperienceResponseDto> getOneExperience(@PathVariable(name="resumeNo") int resumeNo,@PathVariable(name = "exNo")int exNo, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
 
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
 
+        // 내가 작성한 이력서가 맞다면 실행
+        if(experienceService.isMyResume(memberNo,resumeNo)){
+
+            // 해당 이력서의 경험 번호가 맞는지 확인 (내 이력서중 해당 이력서의 경험인지 확인)
+            if(experienceService.isResumeEx(exNo,resumeNo)){
+                ExperienceResponseDto result = experienceService.getOneExperience(exNo);
+                return ResponseEntity.ok(result);
+            }
+            else {
+                // 내 경험은 맞지만, 해당 이력서의 경험이 아님
+                if(experienceService.isMyEx(exNo,memberNo)){
+                    return ResponseEntity.badRequest().build();
+                }
+                else{
+                    // 이력서는 내 것이고, 경험은 존재하지만, 내 경험이 아닐 때
+                    if(experienceService.isEx(exNo)){
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    }
+                    // 경험이 아예 존재하지 않을 때
+                    return ResponseEntity.badRequest().build();
+                }
+            }
+        }
+        // 내가 작성한 이력서가 아니면?
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }

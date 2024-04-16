@@ -22,4 +22,6 @@ public interface ExperienceService {
     boolean isMyEx(int exNo,int memberNo);
 
     boolean isEx(int exNo);
+
+    ExperienceResponseDto getOneExperience(int exNo);
 }
