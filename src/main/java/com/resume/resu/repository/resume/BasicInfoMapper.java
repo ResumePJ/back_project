@@ -41,4 +41,7 @@ public interface BasicInfoMapper {
 
     @Update("update resume set name=#{resumeBasicInfoRequestDTO.name}, gender=#{resumeBasicInfoRequestDTO.gender}, phone=#{resumeBasicInfoRequestDTO.phone},address=#{resumeBasicInfoRequestDTO.address}, intro=#{resumeBasicInfoRequestDTO.intro}, type=#{resumeBasicInfoRequestDTO.type} where resumeNo=#{resumeNo}")
     int updateResumeBasicInfo(@Param("resumeNo") int resumeNo, @Param("resumeBasicInfoRequestDTO") ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO);
+
+    @Select("select count(*) from resume where resumeNo=#{resumeNo}")
+    int isResume(int resumeNo);
 }

@@ -28,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExperienceController {
     public final ExperienceService experienceService;
+    public final BasicInfoService basicInfoService;
     public final JwtUtils jwtUtils;
 
     //경험 추가
@@ -55,8 +56,16 @@ public class ExperienceController {
                 return ResponseEntity.badRequest().build();
             }
         }
-        // 내가 작성한 이력서가 아니면?
+
+        // 내가 작성한 이력서가 아닐 경우
         else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -95,8 +104,15 @@ public class ExperienceController {
                 }
             }
         }
-        // 내가 작성한 이력서가 아니면?
+        // 내가 작성한 이력서가 아닐 경우
         else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -122,8 +138,16 @@ public class ExperienceController {
                 return ResponseEntity.ok(result);
             }
         }
-        // 내가 작성한 이력서가 아니면?
+
+        // 내가 작성한 이력서가 아닐 경우
         else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -159,8 +183,15 @@ public class ExperienceController {
                 }
             }
         }
-        // 내가 작성한 이력서가 아니면?
+        // 내가 작성한 이력서가 아닐 경우
         else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }

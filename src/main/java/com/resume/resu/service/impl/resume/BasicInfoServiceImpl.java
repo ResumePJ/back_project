@@ -145,6 +145,17 @@ public class BasicInfoServiceImpl implements BasicInfoService {
         }
     }
 
+    @Override
+    public boolean isResume(int resumeNo) {
+        int result = basicInfoMapper.isResume(resumeNo);
+
+        // 존재하는 이력서 번호임
+        if(result ==1){
+            return true;
+        }
+        return false;
+    }
+
     private String generateUniqueFileName(String originalFileName){
         //중복 될 가능성이 거의 없는 고유 식별자인 uuid 생성
         UUID uuid = UUID.randomUUID();

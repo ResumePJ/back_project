@@ -46,6 +46,13 @@ public class BasicInfoController {
 
         // 내 이력서가 아닌 이력서를 조회하고자 하면 403 Forbidden 오류 발생
         if(!isMyResume){
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -96,7 +103,17 @@ public class BasicInfoController {
 
             //postman에는 result.getFileId()가 출력됨
             return ResponseEntity.ok(result.getFileId());
-        }else{
+        }
+
+        // 내가 작성한 이력서가 아닐 경우
+        else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(dto.getResumeNo())){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -125,8 +142,15 @@ public class BasicInfoController {
                 return ResponseEntity.notFound().build();
             }
         }
-        // 내가 작성한 이력서가 아니면?
+        // 내가 작성한 이력서가 아닐 경우
         else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -154,8 +178,15 @@ public class BasicInfoController {
                 return ResponseEntity.badRequest().build();
             }
         }
-        // 내가 작성한 이력서가 아니면?
+        // 내가 작성한 이력서가 아닐 경우
         else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 

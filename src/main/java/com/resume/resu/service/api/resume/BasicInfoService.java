@@ -24,4 +24,6 @@ public interface BasicInfoService {
     Resource download(int resumeNo);
 
     ResumeBasicInfoDTO updateResumeBasicInfo(int resumeNo,ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO);
+
+    boolean isResume(int resumeNo);
 }
