@@ -14,4 +14,12 @@ public interface ExperienceService {
     List<ExperienceResponseDto> addExperience(List<ExperienceRequestDto> getListDto, int resumeNo);
 
     ExperienceResponseDto updateExperience (ExperienceRequestDto experienceRequestDto);
+
+    List<ExperienceResponseDto> getFullExperience(int resumeNo);
+
+    boolean isResumeEx(int exNo,int resumeNo);
+
+    boolean isMyEx(int exNo,int memberNo);
+
+    boolean isEx(int exNo);
 }

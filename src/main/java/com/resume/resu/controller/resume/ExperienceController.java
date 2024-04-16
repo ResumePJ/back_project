@@ -74,8 +74,26 @@ public class ExperienceController {
 
         // 내가 작성한 이력서가 맞다면 실행
         if(experienceService.isMyResume(memberNo,resumeNo)){
-            ExperienceResponseDto result = experienceService.updateExperience(experienceRequestDto);
-            return ResponseEntity.ok(result);
+
+            // 해당 이력서의 경험 번호가 맞는지 확인 (내 이력서중 해당 이력서의 경험인지 확인)
+            if(experienceService.isResumeEx(experienceRequestDto.getExNo(),resumeNo)){
+                ExperienceResponseDto result = experienceService.updateExperience(experienceRequestDto);
+                return ResponseEntity.ok(result);
+            }
+            else {
+                // 내 이력서는 맞지만, 해당 이력서의 경험이 아님
+                if(experienceService.isMyEx(experienceRequestDto.getExNo(),memberNo)){
+                    return ResponseEntity.badRequest().build();
+                }
+                else{
+                    // 이력서는 내 것이고, 경험은 존재하지만, 내 경험이 아닐 때
+                    if(experienceService.isEx(experienceRequestDto.getExNo())){
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    }
+                    // 경험이 아예 존재하지 않을 때
+                    return ResponseEntity.badRequest().build();
+                }
+            }
         }
         // 내가 작성한 이력서가 아니면?
         else{
@@ -83,5 +101,33 @@ public class ExperienceController {
         }
 
     }
+
+    //전체 경험 조회
+    @GetMapping("/resume/experience/full/{resumeNo}")
+    public ResponseEntity<List<ExperienceResponseDto>> getFullExperience(@PathVariable(name="resumeNo") int resumeNo, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(experienceService.isMyResume(memberNo,resumeNo)){
+            List<ExperienceResponseDto> result = experienceService.getFullExperience(resumeNo);
+
+            // 리스트가 비어있는지 확인 => null이 아닌, isEmpty로 확인!
+            if(result.isEmpty()){
+                log.info("전체 경험 조회 : noContent");
+                return ResponseEntity.noContent().build();
+            }else{
+                return ResponseEntity.ok(result);
+            }
+        }
+        // 내가 작성한 이력서가 아니면?
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+
 
 }

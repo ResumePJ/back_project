@@ -60,4 +60,36 @@ public class ExperienceServiceImpl implements ExperienceService {
         return result;
     }
 
+    @Override
+    public List<ExperienceResponseDto> getFullExperience(int resumeNo) {
+        return experienceMapper.getFullExperience(resumeNo);
+    }
+
+    @Override
+    public boolean isResumeEx(int exNo,int resumeNo) {
+        int result = experienceMapper.isResumeEx(exNo,resumeNo);
+        if(result ==1){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isMyEx(int exNo,int memberNo) {
+       int result =  experienceMapper.isMyEx(exNo,memberNo);
+       if(result==1){
+           return true;
+       }
+       return false;
+    }
+
+    @Override
+    public boolean isEx(int exNo) {
+        int result = experienceMapper.isEx(exNo);
+        if(result ==1){
+            return true;
+        }
+        return false;
+    }
+
 }
