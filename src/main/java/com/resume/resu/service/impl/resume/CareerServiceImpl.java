@@ -34,4 +34,41 @@ public class CareerServiceImpl implements CareerService {
         return resultList;
 
     }
+
+    @Override
+    public boolean isResumeCareer(int carNo, int resumeNo) {
+        int result= careerMapper.isResumeCareer(carNo,resumeNo);
+
+        // 해당 이력서의 경력일 때
+        if(result ==1){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public CareerResponseDto updateCareer(CareerRequestDto careerRequestDto) {
+        careerMapper.updateCareer(careerRequestDto);
+        CareerResponseDto result = careerMapper.findCareerByCarNo(careerRequestDto.getCarNo());
+        return result;
+    }
+
+    @Override
+    public boolean isMyCareer(int carNo, int memberNo) {
+        int result = careerMapper.isMyCareer(carNo,memberNo);
+
+        // 내 경험이 맞다면?
+        if(result ==1){
+            return true;
+        } return false;
+    }
+
+    @Override
+    public boolean isCareer(int carNo) {
+        int result = careerMapper.isCareer(carNo);
+
+        if(result ==1){
+            return true;
+        }return false;
+    }
 }

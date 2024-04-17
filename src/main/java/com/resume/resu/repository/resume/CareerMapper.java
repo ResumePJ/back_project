@@ -15,4 +15,16 @@ public interface CareerMapper {
     @Select("select * from career where carNo=#{carNo}")
     CareerResponseDto findCareerByCarNo (int carNo);
 
+    @Select("select count(*) from career where carNo=#{carNo} and resumeNo=#{resumeNo}")
+    int isResumeCareer(@Param("carNo") int carNo, @Param("resumeNo") int resumeNo);
+
+    @Update("update career set company=#{careerRequestDto.company}, dept=#{careerRequestDto.dept}, position=#{careerRequestDto.position}, carStartDate=#{careerRequestDto.carStartDate}, carEndDate=#{careerRequestDto.carEndDate}, carDetail=#{careerRequestDto.carDetail} where carNo=#{careerRequestDto.carNo}")
+    int updateCareer(@Param("careerRequestDto") CareerRequestDto careerRequestDto);
+
+    @Select("select count(*) from career inner join resume using(resumeNo) where carNo=#{carNo} and memberNo=#{memberNo}")
+    int isMyCareer(@Param("carNo") int carNo,@Param("memberNo") int memberNo);
+
+    @Select("select count(*) from career where carNo=#{carNo}")
+    int isCareer(int carNo);
+
 }

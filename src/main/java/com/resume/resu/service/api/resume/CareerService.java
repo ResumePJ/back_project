@@ -10,4 +10,12 @@ import java.util.List;
 
 public interface CareerService {
     List<CareerResponseDto> addCareer (List<CareerRequestDto> getListDto, int resumeNo);
+
+    boolean isResumeCareer(int carNo, int resumeNo);
+
+    CareerResponseDto updateCareer(CareerRequestDto careerRequestDto);
+
+    boolean isMyCareer(int carNo,int memberNo);
+
+    boolean isCareer(int carNo);
 }
