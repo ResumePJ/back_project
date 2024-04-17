@@ -5,6 +5,8 @@ import com.resume.resu.vo.request.ExperienceRequestDto;
 import com.resume.resu.vo.response.CareerResponseDto;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface CareerMapper {
 
@@ -26,5 +28,8 @@ public interface CareerMapper {
 
     @Select("select count(*) from career where carNo=#{carNo}")
     int isCareer(int carNo);
+
+    @Select("select * from career where resumeNo=#{resumeNo}")
+    List<CareerResponseDto> getFullCareer(int resumeNo);
 
 }

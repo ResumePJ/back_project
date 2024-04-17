@@ -18,4 +18,6 @@ public interface CareerService {
     boolean isMyCareer(int carNo,int memberNo);
 
     boolean isCareer(int carNo);
+
+    List<CareerResponseDto> getFullCareer(int resumeNo);
 }

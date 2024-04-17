@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -115,6 +112,40 @@ public class CareerController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
+    }
+
+    //전체 경력 들고오기
+    @GetMapping("/resume/career/full/{resumeNo}")
+    public ResponseEntity<List<CareerResponseDto>> getFullCareer(@PathVariable(name="resumeNo")int resumeNo, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(basicInfoService.isMyResume(memberNo,resumeNo)){
+            List<CareerResponseDto> result = careerService.getFullCareer(resumeNo);
+
+            // 리스트가 비어있는지 확인 => null이 아닌, isEmpty로 확인!
+            if(result.isEmpty()){
+                log.info("전체 경력 조회 : noContent");
+                return ResponseEntity.noContent().build();
+            }else{
+                return ResponseEntity.ok(result);
+            }
+        }
+
+        // 내가 작성한 이력서가 아닐 경우
+        else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
 
