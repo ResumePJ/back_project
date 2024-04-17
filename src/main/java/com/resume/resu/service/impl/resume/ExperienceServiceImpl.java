@@ -97,4 +97,10 @@ public class ExperienceServiceImpl implements ExperienceService {
         return experienceMapper.getOneExperience(exNo);
     }
 
+    @Override
+    public List<ExperienceResponseDto> deleteExperience(int exNo, int resumeNo) {
+        experienceMapper.deleteExperience(exNo);
+        return  experienceMapper.getFullExperience(resumeNo);
+    }
+
 }

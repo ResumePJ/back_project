@@ -35,4 +35,7 @@ public interface ExperienceMapper {
 
     @Select("select * from experience where exNo=#{exNo}")
     ExperienceResponseDto getOneExperience(int exNo);
+
+    @Delete("delete from experience where exNo=#{exNo}")
+    int deleteExperience(int exNo);
 }

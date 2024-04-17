@@ -24,4 +24,6 @@ public interface ExperienceService {
     boolean isEx(int exNo);
 
     ExperienceResponseDto getOneExperience(int exNo);
+
+    List<ExperienceResponseDto> deleteExperience(int exNo, int resumeNo);
 }

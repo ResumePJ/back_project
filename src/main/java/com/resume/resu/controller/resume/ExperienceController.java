@@ -195,4 +195,52 @@ public class ExperienceController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    /* 하나의 경험 삭제
+     정상적으로 삭제 시, 해당 이력서의 나머지 존재하는 경험 list 반환 */
+    @DeleteMapping("/resume/experience/delete/{resumeNo}/{exNo}")
+    public ResponseEntity<List<ExperienceResponseDto>>deleteExperience(@PathVariable(name="resumeNo")int resumeNo, @PathVariable(name="exNo") int exNo,HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(experienceService.isMyResume(memberNo,resumeNo)){
+
+            // 해당 이력서의 경험 번호가 맞는지 확인 (내 이력서중 해당 이력서의 경험인지 확인)
+            if(experienceService.isResumeEx(exNo,resumeNo)){
+                 List<ExperienceResponseDto> result = experienceService.deleteExperience(exNo,resumeNo);
+
+                // 삭제 후, 해당 이력서에 존재하는 모든 경험들의 list 반환
+                return ResponseEntity.ok(result);
+            }
+            else {
+                // 이력서는 내 것이고, 내 경험은 맞지만, 해당 이력서의 경험이 아님
+                if(experienceService.isMyEx(exNo,memberNo)){
+                    return ResponseEntity.badRequest().build();
+                }
+                else{
+                    // 이력서는 내 것이고, 경험은 존재하지만, 내 경험이 아닐 때
+                    if(experienceService.isEx(exNo)){
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    }
+                    // 경험이 아예 존재하지 않을 때
+                    return ResponseEntity.badRequest().build();
+                }
+            }
+        }
+        // 내가 작성한 이력서가 아닐 경우
+        else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
 }
