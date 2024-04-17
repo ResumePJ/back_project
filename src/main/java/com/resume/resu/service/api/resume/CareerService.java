@@ -22,4 +22,6 @@ public interface CareerService {
     List<CareerResponseDto> getFullCareer(int resumeNo);
 
     CareerResponseDto getOneCareer(int carNo);
+
+    List<CareerResponseDto> deleteCareer (int carNo,int resumeNo);
 }

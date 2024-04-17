@@ -35,4 +35,7 @@ public interface CareerMapper {
     @Select("select * from career where carNo=#{carNo}")
     CareerResponseDto getOneCareer(int carNo);
 
+    @Delete("delete from career where carNo=#{carNo} ")
+    int deleteCareer(int carNo);
+
 }

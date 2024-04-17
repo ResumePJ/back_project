@@ -192,5 +192,52 @@ public class CareerController {
         }
     }
 
+    /* 하나의 경력 삭제
+     정상적으로 삭제 시, 해당 이력서의 나머지 존재하는 경력 list 반환 */
+    @DeleteMapping("/resume/career/delete/{resumeNo}/{carNo}")
+    public ResponseEntity<List<CareerResponseDto>>deleteCareer(@PathVariable(name="resumeNo")int resumeNo, @PathVariable(name="carNo") int carNo,HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(basicInfoService.isMyResume(memberNo,resumeNo)){
+
+            // 해당 이력서의 경력 번호가 맞는지 확인 (내 이력서중 해당 이력서의 경력인지 확인)
+            if(careerService.isResumeCareer(carNo,resumeNo)){
+                List<CareerResponseDto> result = careerService.deleteCareer(carNo,resumeNo);
+
+                // 삭제 후, 해당 이력서에 존재하는 모든 경력들의 list 반환
+                return ResponseEntity.ok(result);
+            }
+            else {
+                // 이력서는 내 것이고, 내 경력은 맞지만, 해당 이력서의 경력이 아님
+                if(careerService.isMyCareer(carNo,memberNo)){
+                    return ResponseEntity.badRequest().build();
+                }
+                else{
+                    // 이력서는 내 것이고, 경력은 존재하지만, 내 경력이 아닐 때
+                    if(careerService.isCareer(carNo)){
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    }
+                    // 경력이 아예 존재하지 않을 때
+                    return ResponseEntity.badRequest().build();
+                }
+            }
+        }
+        // 내가 작성한 이력서가 아닐 경우
+        else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
 
 }

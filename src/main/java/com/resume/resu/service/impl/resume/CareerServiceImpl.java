@@ -82,4 +82,10 @@ public class CareerServiceImpl implements CareerService {
         CareerResponseDto result = careerMapper.getOneCareer(carNo);
         return result;
     }
+
+    @Override
+    public List<CareerResponseDto> deleteCareer(int carNo, int resumeNo) {
+        careerMapper.deleteCareer(carNo);
+        return careerMapper.getFullCareer(resumeNo);
+    }
 }
