@@ -76,4 +76,10 @@ public class CareerServiceImpl implements CareerService {
     public List<CareerResponseDto> getFullCareer(int resumeNo) {
         return careerMapper.getFullCareer(resumeNo);
     }
+
+    @Override
+    public CareerResponseDto getOneCareer(int carNo) {
+        CareerResponseDto result = careerMapper.getOneCareer(carNo);
+        return result;
+    }
 }

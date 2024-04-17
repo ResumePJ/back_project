@@ -32,4 +32,7 @@ public interface CareerMapper {
     @Select("select * from career where resumeNo=#{resumeNo}")
     List<CareerResponseDto> getFullCareer(int resumeNo);
 
+    @Select("select * from career where carNo=#{carNo}")
+    CareerResponseDto getOneCareer(int carNo);
+
 }
