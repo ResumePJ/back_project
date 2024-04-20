@@ -70,4 +70,11 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
         return false;
     }
+
+    @Override
+    public List<PortfolioResponseDto> getFullPortfolio(int resumeNo) {
+        List<PortfolioResponseDto> result = null;
+        result = portfolioMapper.getFullPortfolio(resumeNo);
+        return result;
+    }
 }

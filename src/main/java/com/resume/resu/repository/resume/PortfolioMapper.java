@@ -4,6 +4,8 @@ import com.resume.resu.vo.request.PortfolioRequestDto;
 import com.resume.resu.vo.response.PortfolioResponseDto;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface PortfolioMapper {
 
@@ -25,4 +27,7 @@ public interface PortfolioMapper {
 
     @Select("select count(*) from portfolio where pofolNo=#{pofolNo}")
     int isPofol(@Param("pofolNo") int pofolNo);
+
+    @Select("select * from portfolio where resumeNo=#{resumeNo}")
+    List<PortfolioResponseDto> getFullPortfolio(int resumeNo);
 }
