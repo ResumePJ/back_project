@@ -34,4 +34,40 @@ public class PortfolioServiceImpl implements PortfolioService {
 
         return resultList;
     }
+
+    @Override
+    public boolean isResumePofol(int pofolNo, int resumeNo) {
+        int result = portfolioMapper.isResumePofol(pofolNo, resumeNo);
+
+        if(result ==1){
+            return true;
+        } return false;
+    }
+
+    @Override
+    public PortfolioResponseDto updatePortfolio(PortfolioRequestDto portfolioRequestDto) {
+        portfolioMapper.updatePortfolio(portfolioRequestDto);
+        PortfolioResponseDto result = portfolioMapper.findPofolByPofolNo(portfolioRequestDto.getPofolNo());
+        return result;
+    }
+
+    @Override
+    public boolean isMyPofol(int pofolNo, int memberNo) {
+        int result = portfolioMapper.isMyPofol(pofolNo,memberNo);
+
+        if(result == 1 ){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPofol(int pofolNo) {
+        int result = portfolioMapper.isPofol(pofolNo);
+
+        if(result ==1){
+            return true;
+        }
+        return false;
+    }
 }
