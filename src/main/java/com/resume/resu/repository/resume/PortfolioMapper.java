@@ -30,4 +30,7 @@ public interface PortfolioMapper {
 
     @Select("select * from portfolio where resumeNo=#{resumeNo}")
     List<PortfolioResponseDto> getFullPortfolio(int resumeNo);
+
+    @Select("select * from portfolio where pofolNo=#{pofolNo}")
+    PortfolioResponseDto getOnePofol(int pofolNo);
 }

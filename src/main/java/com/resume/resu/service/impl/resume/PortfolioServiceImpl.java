@@ -77,4 +77,11 @@ public class PortfolioServiceImpl implements PortfolioService {
         result = portfolioMapper.getFullPortfolio(resumeNo);
         return result;
     }
+
+    @Override
+    public PortfolioResponseDto getOnePofol(int pofolNo) {
+        PortfolioResponseDto result = null;
+        result = portfolioMapper.getOnePofol(pofolNo);
+        return result;
+    }
 }

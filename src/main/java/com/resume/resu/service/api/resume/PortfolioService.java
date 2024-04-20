@@ -18,4 +18,6 @@ public interface PortfolioService {
     boolean isPofol(int pofolNo);
 
     List<PortfolioResponseDto> getFullPortfolio(int resumeNo);
+
+    PortfolioResponseDto getOnePofol(int pofolNo);
 }
