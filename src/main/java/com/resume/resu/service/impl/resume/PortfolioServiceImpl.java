@@ -84,4 +84,14 @@ public class PortfolioServiceImpl implements PortfolioService {
         result = portfolioMapper.getOnePofol(pofolNo);
         return result;
     }
+
+    @Override
+    public List<PortfolioResponseDto> deletePortfolio(int pofolNo, int resumeNo) {
+        portfolioMapper.deletePortfolio(pofolNo);
+
+        List<PortfolioResponseDto> result = null;
+        result = portfolioMapper.getFullPortfolio(resumeNo);
+
+        return result;
+    }
 }

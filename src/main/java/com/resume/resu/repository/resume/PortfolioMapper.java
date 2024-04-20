@@ -33,4 +33,7 @@ public interface PortfolioMapper {
 
     @Select("select * from portfolio where pofolNo=#{pofolNo}")
     PortfolioResponseDto getOnePofol(int pofolNo);
+
+    @Delete("delete from portfolio where pofolNo=#{pofolNo}")
+    int deletePortfolio(int pofolNo);
 }

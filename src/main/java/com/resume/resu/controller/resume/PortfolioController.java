@@ -9,6 +9,7 @@ import com.resume.resu.vo.response.PortfolioResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -194,5 +195,48 @@ public class PortfolioController {
         }
     }
 
+    // 하나의 포폴 삭제
+    @DeleteMapping("/resume/portfolio/delete/{resumeNo}/{pofolNo}")
+    public ResponseEntity<List<PortfolioResponseDto>> deletePortfolio(@PathVariable(name="resumeNo")int resumeNo, @PathVariable(name="pofolNo")int pofolNo, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        // 내가 작성한 이력서가 맞다면 실행
+        if(basicInfoService.isMyResume(memberNo,resumeNo)){
+
+            // 해당 이력서의 포폴 번호가 맞는지 확인 (내 이력서중 해당 이력서의 포폴인지 확인)
+            if(portfolioService.isResumePofol(pofolNo,resumeNo)){
+                List<PortfolioResponseDto> result = portfolioService.deletePortfolio(pofolNo,resumeNo);
+                return ResponseEntity.ok(result);
+            }
+            else {
+                // 내 포폴은 맞지만, 해당 이력서의 포폴이 아님
+                if(portfolioService.isMyPofol(pofolNo,memberNo)){
+                    return ResponseEntity.badRequest().build();
+                }
+                else{
+                    // 이력서는 내 것이고, 포폴은 존재하지만, 내 포폴이 아닐 때
+                    if(portfolioService.isPofol(pofolNo)){
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                    }
+                    // 포폴이 아예 존재하지 않을 때
+                    return ResponseEntity.badRequest().build();
+                }
+            }
+        }
+        // 내가 작성한 이력서가 아닐 경우
+        else{
+
+            // 존재하지 않는 이력서 번호라면?
+            if(!basicInfoService.isResume(resumeNo)){
+                return ResponseEntity.badRequest().build();
+            }
+
+            // 실재하는 이력서 번호이지만, 내 이력서가 아님
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
 }

@@ -20,4 +20,6 @@ public interface PortfolioService {
     List<PortfolioResponseDto> getFullPortfolio(int resumeNo);
 
     PortfolioResponseDto getOnePofol(int pofolNo);
+
+    List<PortfolioResponseDto> deletePortfolio(int pofolNo,int resumeNo);
 }
