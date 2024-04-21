@@ -3,6 +3,7 @@ package com.resume.resu.service.impl.member;
 import com.resume.resu.repository.member.MemberMapper;
 import com.resume.resu.service.api.member.MemberService;
 import com.resume.resu.vo.request.MemberRequestDto;
+import com.resume.resu.vo.request.UpdateMemberRequestDto;
 import com.resume.resu.vo.response.MemberDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,5 +45,16 @@ public class MemberServiceImpl implements MemberService {
         MemberDTO member = null;
         member = memberMapper.findMemberInfoByMemberNo(memberNo);
         return member;
+    }
+
+    @Override
+    public MemberDTO updateMemberInfo(UpdateMemberRequestDto updateMemberRequestDto,int memberNo) {
+        int result = memberMapper.updateMemberInfo(updateMemberRequestDto,memberNo);
+
+        if(result < 1){
+            return null;
+        }else{
+            return memberMapper.findMemberInfoByMemberNo(memberNo);
+        }
     }
 }

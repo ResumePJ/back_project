@@ -3,6 +3,7 @@ package com.resume.resu.controller.member;
 import com.resume.resu.service.api.member.MemberService;
 import com.resume.resu.util.JwtUtils;
 import com.resume.resu.vo.request.MemberRequestDto;
+import com.resume.resu.vo.request.UpdateMemberRequestDto;
 import com.resume.resu.vo.response.MemberDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,24 @@ public class MemberController {
         }else{
             return ResponseEntity.ok(member);
         }
+    }
+
+    // 내 정보 수정
+    @PostMapping("/member/info/update")
+    public ResponseEntity<MemberDTO> updateMemberInfo(@ModelAttribute UpdateMemberRequestDto updateMemberRequestDto, HttpServletRequest req){
+        String accessToken=jwtUtils.getAcceessToken(req);
+
+        // 요청 헤더의 토큰에서 memberNo 가져옴
+        int memberNo = jwtUtils.getMemberNo(accessToken);
+
+        MemberDTO member = memberService.updateMemberInfo(updateMemberRequestDto, memberNo);
+
+        if(member==null){
+            return ResponseEntity.badRequest().build();
+        }else{
+            return ResponseEntity.ok(member);
+        }
+
     }
 
 
