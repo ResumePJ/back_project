@@ -38,4 +38,11 @@ public class MemberServiceImpl implements MemberService {
 
         return member;
     }
+
+    @Override
+    public MemberDTO getMemberInfoAfterLogin(int memberNo) {
+        MemberDTO member = null;
+        member = memberMapper.findMemberInfoByMemberNo(memberNo);
+        return member;
+    }
 }

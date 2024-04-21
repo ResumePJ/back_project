@@ -5,4 +5,6 @@ import com.resume.resu.vo.response.MemberDTO;
 
 public interface MemberService {
     MemberDTO getMemberInfo(MemberRequestDto memberRequestDto);
+
+    MemberDTO getMemberInfoAfterLogin(int memberNo);
 }
