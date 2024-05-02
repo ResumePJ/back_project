@@ -48,6 +48,12 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 	
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// 이메일 보내기 위해 사용 하는 springBoot framework의 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

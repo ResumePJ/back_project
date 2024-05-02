@@ -11,7 +11,8 @@ public class WebApplicationConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //인터셉터 등록
-        registry.addInterceptor(new JwtInterceptor(new JwtUtils())).excludePathPatterns("/login/email").excludePathPatterns("/member/info").excludePathPatterns("/error");
+        registry.addInterceptor(new JwtInterceptor(new JwtUtils())).excludePathPatterns("/login/email").excludePathPatterns("/member/info").excludePathPatterns("/error")
+                .excludePathPatterns("/member/email/send").excludePathPatterns("/member/email/authentication");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

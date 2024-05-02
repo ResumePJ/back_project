@@ -1,5 +1,6 @@
 INSERT INTO resudb.member(email,password,name,phone,birth,joinDate,type) values ('test@test.com','test','testname','01012345678','1999-01-01','2024-03-13',0);
-INSERT INTO resudb.member(email,password,name,phone,birth,joinDate,type) values ('test2@test.com','test2','testname2','01022345678','1999-02-01','2024-02-13',0);
+
+INSERT INTO resudb.member(email,password,name,phone,birth,joinDate,type) values ('여기에실제이메일넣어라','test2','testname2','01022345678','1999-02-01','2024-02-13',0);
 
 
 
