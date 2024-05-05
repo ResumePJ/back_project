@@ -1,5 +1,7 @@
 package com.resume.resu.interceptor;
 
+import com.resume.resu.exception.InvalidTokenException;
+import com.resume.resu.exception.MissingTokenException;
 import com.resume.resu.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,11 +41,13 @@ public class JwtInterceptor implements HandlerInterceptor {
                 return true;
             }else{
                 log.info("검증 실패한 토큰임. URI : {}",uri);
-                return false;
+//              return false;
+                throw new InvalidTokenException("검증 실패한 토큰");
             }
         } else {
           log.info("access Token is null!");
-          return false;
+//          return false;
+            throw new MissingTokenException("Access token is missing");
         }
     }
 }
