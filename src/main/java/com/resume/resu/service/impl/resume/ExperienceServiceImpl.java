@@ -3,6 +3,7 @@ package com.resume.resu.service.impl.resume;
 import com.resume.resu.repository.resume.ExperienceMapper;
 import com.resume.resu.service.api.resume.ExperienceService;
 import com.resume.resu.vo.request.ExperienceRequestDto;
+import com.resume.resu.vo.request.ExperienceRequestDtoList;
 import com.resume.resu.vo.response.ExperienceResponseDto;
 import com.resume.resu.vo.response.MultipartUploadResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,10 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
-    public List<ExperienceResponseDto> addExperience(List<ExperienceRequestDto> getListDto, int resumeNo) {
+    public List<ExperienceResponseDto> addExperience(ExperienceRequestDtoList getListDto, int resumeNo) {
         List<ExperienceResponseDto> resultList = new ArrayList<>();
 
-        for (ExperienceRequestDto experienceRequestDto : getListDto) {
+        for (ExperienceRequestDto experienceRequestDto : getListDto.getList()) {
             int insertRow = experienceMapper.addExperience(experienceRequestDto,resumeNo);
             log.info("addExperience의 insertRow : {}",insertRow);
 
@@ -44,11 +45,7 @@ public class ExperienceServiceImpl implements ExperienceService {
             }
         }
 
-        if (getListDto.size() == resultList.size()) {
-            return resultList;
-        } else {
-            return null;
-        }
+        return resultList;
     }
 
     @Override

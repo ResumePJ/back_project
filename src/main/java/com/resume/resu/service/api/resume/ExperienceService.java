@@ -1,6 +1,7 @@
 package com.resume.resu.service.api.resume;
 
 import com.resume.resu.vo.request.ExperienceRequestDto;
+import com.resume.resu.vo.request.ExperienceRequestDtoList;
 import com.resume.resu.vo.response.ExperienceResponseDto;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public interface ExperienceService {
 
     boolean isMyResume(int memberNo, int resumeNo);
 
-    List<ExperienceResponseDto> addExperience(List<ExperienceRequestDto> getListDto, int resumeNo);
+    List<ExperienceResponseDto> addExperience(ExperienceRequestDtoList getListDto, int resumeNo);
 
     ExperienceResponseDto updateExperience (ExperienceRequestDto experienceRequestDto);
 

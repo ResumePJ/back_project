@@ -4,10 +4,12 @@ import com.resume.resu.service.api.resume.BasicInfoService;
 import com.resume.resu.service.api.resume.ExperienceService;
 import com.resume.resu.util.JwtUtils;
 import com.resume.resu.vo.request.ExperienceRequestDto;
+import com.resume.resu.vo.request.ExperienceRequestDtoList;
 import com.resume.resu.vo.response.ExperienceResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @Slf4j
 @RequiredArgsConstructor
 public class ExperienceController {
@@ -36,7 +38,7 @@ public class ExperienceController {
     // JSON 형식의 List<ExperienceRequestDto> getListDto 데이터를 받아야함 !
     // exNo는 받아오지 않음. 자동으로 생성됨 (auto_increment)
     @PostMapping ("/resume/experience/{resumeNo}")
-    public ResponseEntity<List<ExperienceResponseDto>> addExperience(@PathVariable(name="resumeNo")int resumeNo, @RequestBody List<ExperienceRequestDto> getListDto, HttpServletRequest req){
+    public ResponseEntity<List<ExperienceResponseDto>> addExperience(@PathVariable(name="resumeNo")int resumeNo, @ModelAttribute ExperienceRequestDtoList getListDto, HttpServletRequest req){
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -46,15 +48,7 @@ public class ExperienceController {
         if(experienceService.isMyResume(memberNo,resumeNo)){
             log.info("addExperience의 getListDto : {}",getListDto);
             List<ExperienceResponseDto> list = experienceService.addExperience(getListDto,resumeNo);
-
-            // 경험 정보 삽입 후, 삽입 정보 반환 했을 경우
-            if(list != null){
-                return ResponseEntity.ok(list);
-            }
-            // 경험 정보 삽입 시, 오류 발생
-            else{
-                return ResponseEntity.badRequest().build();
-            }
+            return ResponseEntity.ok(list);
         }
 
         // 내가 작성한 이력서가 아닐 경우
