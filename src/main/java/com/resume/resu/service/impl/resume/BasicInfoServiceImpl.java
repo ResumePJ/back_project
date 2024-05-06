@@ -74,6 +74,16 @@ public class BasicInfoServiceImpl implements BasicInfoService {
         // 유니크한 파일 이름 생성
         String uniqueFileName = generateUniqueFileName(originalFileName);
 
+        //.png 파일 형태가 아니면 null 반환
+        if(uniqueFileName==null){
+
+            //기본값으로 초기화된 객체 생성
+            MultipartUploadResponseDto multipartUploadResponseDto = new MultipartUploadResponseDto();
+            multipartUploadResponseDto.setMessage("not png type");
+            log.info("not .png type image upload");
+            return multipartUploadResponseDto;
+        }
+
         // 문자열 경로로부터 Path 객체 생성 -> Files.exists()의 인자는 Path형이기 때문
         Path directoryPath = Paths.get(uploadPath);
 
@@ -108,8 +118,16 @@ public class BasicInfoServiceImpl implements BasicInfoService {
     @Override
     public Resource download(int resumeNo) {
         String filePath = uploadPath+"\\";
-        // 사진 이름 가져옴
+
+        // 해당 이력서의 제일 최근 사진 가져옴
         MultipartUploadResponseDto image = basicInfoMapper.findImageByResumeNo(resumeNo);
+
+        // 이력서에 사진이 아예 없을 경우
+        if (image == null){
+            log.info("이력서에 사진이 아예 없음!");
+            return null;
+        }
+
         String fileName = image.getFileName();
         log.info("fileName : {}",fileName);
 
@@ -119,9 +137,15 @@ public class BasicInfoServiceImpl implements BasicInfoService {
             Path path = Paths.get(filePath+fileName).normalize();
             log.info("file Path {}",path);
             Resource resource = new UrlResource(path.toUri());
+
+            // 해당 주소에 해당 사진이 있다면?
             if(resource.exists()){
                 return resource;
-            } else{
+            }
+
+            // DB에 기록은 있으나, 실제로는 원하는 filepath에 파일이 존재하지 않는 경우 등
+            else{
+                log.info("해당 주소에 실제 사진이 없음!");
                 return null;
             }
         }catch (Exception e){
@@ -174,6 +198,11 @@ public class BasicInfoServiceImpl implements BasicInfoService {
         if(lastIndex != -1){
             // 인덱스부터 자름 ('.확장자' 부분을 자름)
             extension = originalFileName.substring(lastIndex);
+
+            // .png가 아니면 null을 리턴
+            if(!extension.equals(".png")){
+                return null;
+            }
 
             // 0 ~ lastIndex-1까지 자름
             fileName = originalFileName.substring(0,lastIndex);

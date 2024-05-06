@@ -90,7 +90,7 @@ public class BasicInfoController {
 
     // form 형식으로 이미지 업로드
     @PostMapping("/resume/basic/upload/photo")
-    public ResponseEntity<Integer> uploadResumePhoto(@ModelAttribute MultipartUploadRequestDto dto,HttpServletRequest req){
+    public ResponseEntity<?> uploadResumePhoto(@ModelAttribute MultipartUploadRequestDto dto,HttpServletRequest req){
 
         String accessToken=jwtUtils.getAcceessToken(req);
 
@@ -101,6 +101,10 @@ public class BasicInfoController {
         if(basicInfoService.isMyResume(memberNo,dto.getResumeNo())){
             MultipartUploadResponseDto result = basicInfoService.uploadFile(dto);
 
+            // png 확장자가 아닌 사진을 업로드 하려 하면 400 에러 발생
+            if(result.getMessage()!=null && result.getMessage().equals("not png type")){
+                return ResponseEntity.badRequest().body("not png type");
+            }
             //postman에는 result.getFileId()가 출력됨
             return ResponseEntity.ok(result.getFileId());
         }
@@ -136,7 +140,7 @@ public class BasicInfoController {
                 log.info("사진이 있음");
                 return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(file.getFilename(), StandardCharsets.UTF_8) + "\"").body(file);
             }
-            // DB에 사진이 없다면?
+            // DB에 사진이 없다면? 이력서에 사진이 아예 없다면?
             else{
                 log.info("사진이 없음");
                 return ResponseEntity.notFound().build();
@@ -147,6 +151,7 @@ public class BasicInfoController {
 
             // 존재하지 않는 이력서 번호라면?
             if(!basicInfoService.isResume(resumeNo)){
+                log.info("존재하지 않는 이력서 번호");
                 return ResponseEntity.badRequest().build();
             }
 
