@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @Slf4j
 @RequiredArgsConstructor
 public class CareerController {
@@ -42,15 +42,8 @@ public class CareerController {
         if(basicInfoService.isMyResume(memberNo,resumeNo)){
             log.info("addCareer의 getListDto : {}",getListDto);
             List<CareerResponseDto> list = careerService.addCareer(getListDto,resumeNo);
+            return ResponseEntity.ok(list);
 
-            // 경력 정보 삽입 후, 삽입 정보 반환 했을 경우
-            if(list != null){
-                return ResponseEntity.ok(list);
-            }
-            // 경력 정보 삽입 시, 오류 발생
-            else{
-                return ResponseEntity.badRequest().build();
-            }
         }
 
         // 내가 작성한 이력서가 아닐 경우
