@@ -10,4 +10,5 @@ public class MultipartUploadResponseDto {
     int resumeNo;
     String fileName;
     LocalDateTime uploadDate;
+    String message;
 }
