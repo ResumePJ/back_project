@@ -2,6 +2,7 @@ package com.resume.resu.service.api.resume;
 
 
 import com.resume.resu.vo.request.CareerRequestDto;
+import com.resume.resu.vo.request.CareerRequestDtoList;
 import com.resume.resu.vo.request.ExperienceRequestDto;
 import com.resume.resu.vo.response.CareerResponseDto;
 import com.resume.resu.vo.response.ExperienceResponseDto;
@@ -9,7 +10,7 @@ import com.resume.resu.vo.response.ExperienceResponseDto;
 import java.util.List;
 
 public interface CareerService {
-    List<CareerResponseDto> addCareer (List<CareerRequestDto> getListDto, int resumeNo);
+    List<CareerResponseDto> addCareer (CareerRequestDtoList getListDto, int resumeNo);
 
     boolean isResumeCareer(int carNo, int resumeNo);
 

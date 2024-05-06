@@ -3,6 +3,7 @@ package com.resume.resu.service.impl.resume;
 import com.resume.resu.repository.resume.CareerMapper;
 import com.resume.resu.service.api.resume.CareerService;
 import com.resume.resu.vo.request.CareerRequestDto;
+import com.resume.resu.vo.request.CareerRequestDtoList;
 import com.resume.resu.vo.request.ExperienceRequestDto;
 import com.resume.resu.vo.response.CareerResponseDto;
 import com.resume.resu.vo.response.ExperienceResponseDto;
@@ -20,10 +21,10 @@ public class CareerServiceImpl implements CareerService {
 
     public final CareerMapper careerMapper;
     @Override
-    public List<CareerResponseDto> addCareer(List<CareerRequestDto> getListDto, int resumeNo) {
+    public List<CareerResponseDto> addCareer(CareerRequestDtoList getListDto, int resumeNo) {
         List<CareerResponseDto> resultList = new ArrayList<>();
 
-        for (CareerRequestDto careerRequestDto : getListDto) {
+        for (CareerRequestDto careerRequestDto : getListDto.getList()) {
             careerMapper.addCareer(careerRequestDto,resumeNo);
 
             log.info("careerRequestDto의 carNo : {}",careerRequestDto.getCarNo());

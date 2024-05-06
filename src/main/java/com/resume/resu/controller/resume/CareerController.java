@@ -5,6 +5,7 @@ import com.resume.resu.service.api.resume.CareerService;
 import com.resume.resu.service.api.resume.ExperienceService;
 import com.resume.resu.util.JwtUtils;
 import com.resume.resu.vo.request.CareerRequestDto;
+import com.resume.resu.vo.request.CareerRequestDtoList;
 import com.resume.resu.vo.request.ExperienceRequestDto;
 import com.resume.resu.vo.response.CareerResponseDto;
 import com.resume.resu.vo.response.ExperienceResponseDto;
@@ -32,7 +33,7 @@ public class CareerController {
     // JSON 형식의 List<CareerRequestDto> getListDto 데이터를 받아야함 !
     // carNo는 받아오지 않음. 자동으로 생성된 후 값이 대입됨(auto_increment)
     @PostMapping("/resume/career/{resumeNo}")
-    public ResponseEntity<List<CareerResponseDto>> addCareer(@PathVariable(name="resumeNo")int resumeNo, @RequestBody List<CareerRequestDto> getListDto, HttpServletRequest req){
+    public ResponseEntity<List<CareerResponseDto>> addCareer(@PathVariable(name="resumeNo")int resumeNo, @ModelAttribute CareerRequestDtoList getListDto, HttpServletRequest req){
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -42,6 +43,7 @@ public class CareerController {
         if(basicInfoService.isMyResume(memberNo,resumeNo)){
             log.info("addCareer의 getListDto : {}",getListDto);
             List<CareerResponseDto> list = careerService.addCareer(getListDto,resumeNo);
+            log.info("삽입한 경력 내역 : {}",list );
             return ResponseEntity.ok(list);
 
         }

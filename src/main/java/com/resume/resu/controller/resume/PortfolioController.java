@@ -4,6 +4,7 @@ import com.resume.resu.service.api.resume.BasicInfoService;
 import com.resume.resu.service.api.resume.PortfolioService;
 import com.resume.resu.util.JwtUtils;
 import com.resume.resu.vo.request.PortfolioRequestDto;
+import com.resume.resu.vo.request.PortfolioRequestDtoList;
 import com.resume.resu.vo.response.CareerResponseDto;
 import com.resume.resu.vo.response.PortfolioResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class PortfolioController {
 
@@ -33,7 +34,7 @@ public class PortfolioController {
     * */
 
     @PostMapping("/resume/portfolio/{resumeNo}")
-    public ResponseEntity<List<PortfolioResponseDto>> addPortfolio(@PathVariable(name="resumeNo") int resumeNo, @RequestBody List<PortfolioRequestDto> getListDto, HttpServletRequest req){
+    public ResponseEntity<List<PortfolioResponseDto>> addPortfolio(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute PortfolioRequestDtoList getListDto, HttpServletRequest req){
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -43,15 +44,9 @@ public class PortfolioController {
         if(basicInfoService.isMyResume(memberNo,resumeNo)){
             log.info("addPortfolio의 getListDto : {}",getListDto);
             List<PortfolioResponseDto> list = portfolioService.addPortfolio(getListDto,resumeNo);
+            log.info("삽입한 포폴 내역 : {}",list );
+            return ResponseEntity.ok(list);
 
-            // 포폴 정보 삽입 후, 삽입 정보 반환 했을 경우
-            if(list != null){
-                return ResponseEntity.ok(list);
-            }
-            // 포폴 정보 삽입 시, 오류 발생
-            else{
-                return ResponseEntity.badRequest().build();
-            }
         }
 
         // 내가 작성한 이력서가 아닐 경우
