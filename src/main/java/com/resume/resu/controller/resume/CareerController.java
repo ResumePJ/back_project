@@ -33,7 +33,21 @@ public class CareerController {
     // JSON 형식의 List<CareerRequestDto> getListDto 데이터를 받아야함 !
     // carNo는 받아오지 않음. 자동으로 생성된 후 값이 대입됨(auto_increment)
     @PostMapping("/resume/career/{resumeNo}")
-    public ResponseEntity<List<CareerResponseDto>> addCareer(@PathVariable(name="resumeNo")int resumeNo, @ModelAttribute CareerRequestDtoList getListDto, HttpServletRequest req){
+    public ResponseEntity<?> addCareer(@PathVariable(name="resumeNo")int resumeNo, @ModelAttribute CareerRequestDtoList getListDto, HttpServletRequest req){
+        log.info("CarRequestDtoList : {}",getListDto);
+        if(getListDto.getList()==null){
+            log.info("dto가 null입니다.");
+            return ResponseEntity.badRequest().body("dto가 null입니다.");
+        }
+
+        for(CareerRequestDto dto:getListDto.getList()){
+            if(dto.getCompany()==null|| dto.getDept()==null || dto.getPosition()==null ||
+               dto.getCarStartDate()==null || dto.getCarEndDate()==null || dto.getCarDetail()==null){
+                log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+                return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            }
+        }
+
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -64,9 +78,16 @@ public class CareerController {
     // 경력 수정
     // 하나의 경력에 대한 정보를 가져와, 해당 경력을 수정, 수정한 경력 하나만 반환
     // carNo까지 Dto에 받아와야함!
-    /* TODO : 프론트엔드 작업하면서 수정해야할 경우, 수정 할 것*/
     @PostMapping("/resume/career/update/{resumeNo}")
-    public ResponseEntity<CareerResponseDto> updateCareer(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute CareerRequestDto careerRequestDto, HttpServletRequest req){
+    public ResponseEntity<?> updateCareer(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute CareerRequestDto careerRequestDto, HttpServletRequest req){
+
+        // carNo는 경력 번호 없음으로 오류 발생 잡힘
+        if(careerRequestDto.getCompany()==null|| careerRequestDto.getDept()==null || careerRequestDto.getPosition()==null ||
+                careerRequestDto.getCarStartDate()==null || careerRequestDto.getCarEndDate()==null || careerRequestDto.getCarDetail()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+        }
+
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -90,6 +111,7 @@ public class CareerController {
                     if(careerService.isCareer(careerRequestDto.getCarNo())){
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
                     }
+                    log.info("경력 번호가 존재하지 않음");
                     // 경력이 아예 존재하지 않을 때
                     return ResponseEntity.badRequest().build();
                 }
@@ -100,6 +122,7 @@ public class CareerController {
 
             // 존재하지 않는 이력서 번호라면?
             if(!basicInfoService.isResume(resumeNo)){
+                log.info("경력 추가의 이력서 번호가 존재하지 않는 이력서 번호임");
                 return ResponseEntity.badRequest().build();
             }
 

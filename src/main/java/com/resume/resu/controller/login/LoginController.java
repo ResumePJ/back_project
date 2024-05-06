@@ -28,6 +28,10 @@ public class LoginController {
     // form 로그인
     @PostMapping("/login/email")
     public ResponseEntity<?> emailLogin(@ModelAttribute EmailLoginRequestDto emailLoginRequestDto){
+        if(emailLoginRequestDto.getPassword()==null || emailLoginRequestDto.getEmail()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+        }
 
         MemberDTO member = loginService.checkForLogin(emailLoginRequestDto);
 
@@ -44,7 +48,8 @@ public class LoginController {
             // response header에 담아서 보내는 방법
             // return ResponseEntity.ok().header("Authorization","Bearer "+jwt).build();
 
-        }else{
+        }
+        else{
             log.info("emailLogin response member is null");
 
             // 응답 생성

@@ -63,10 +63,16 @@ public class BasicInfoController {
         }
     }
 
-    // form 전송 방식
     @PostMapping("/resume/basic")
-    public ResponseEntity<Integer> addResumeBasicInfo(@ModelAttribute ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, HttpServletRequest req){
+    public ResponseEntity<?> addResumeBasicInfo(@ModelAttribute ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, HttpServletRequest req){
+        log.info("dto : {}",resumeBasicInfoRequestDTO);
 
+        //boolean 타입은 입력하지 않을 경우, 알아서 바로 400오류 발생함
+        if(resumeBasicInfoRequestDTO.getName()==null||resumeBasicInfoRequestDTO.getPhone()==null||resumeBasicInfoRequestDTO.getAddress()==null||
+                resumeBasicInfoRequestDTO.getIntro()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+        }
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -92,6 +98,10 @@ public class BasicInfoController {
     @PostMapping("/resume/basic/upload/photo")
     public ResponseEntity<?> uploadResumePhoto(@ModelAttribute MultipartUploadRequestDto dto,HttpServletRequest req){
 
+        if( dto.getUploadFile()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+        }
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -114,6 +124,7 @@ public class BasicInfoController {
 
             // 존재하지 않는 이력서 번호라면?
             if(!basicInfoService.isResume(dto.getResumeNo())){
+                log.info("존재하지 않는 이력서 번호임!");
                 return ResponseEntity.badRequest().build();
             }
 
@@ -162,7 +173,16 @@ public class BasicInfoController {
 
 
     @PostMapping("/resume/basic/update/{resumeNo}")
-    public ResponseEntity<ResumeBasicInfoDTO> updateResumeBasicInfo(@PathVariable(name="resumeNo")int resumeNo,@ModelAttribute ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, HttpServletRequest req){
+    public ResponseEntity<?> updateResumeBasicInfo(@PathVariable(name="resumeNo")int resumeNo,@ModelAttribute ResumeBasicInfoRequestDTO resumeBasicInfoRequestDTO, HttpServletRequest req){
+
+        //boolean 타입은 비어있으면 알아서 자동으로 400에러 발생
+        if(resumeBasicInfoRequestDTO.getName()==null||resumeBasicInfoRequestDTO.getPhone()==null||resumeBasicInfoRequestDTO.getAddress()==null||
+                resumeBasicInfoRequestDTO.getIntro()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+        }
+
+
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴

@@ -3,6 +3,7 @@ package com.resume.resu.controller.resume;
 import com.resume.resu.service.api.resume.BasicInfoService;
 import com.resume.resu.service.api.resume.PortfolioService;
 import com.resume.resu.util.JwtUtils;
+import com.resume.resu.vo.request.ExperienceRequestDto;
 import com.resume.resu.vo.request.PortfolioRequestDto;
 import com.resume.resu.vo.request.PortfolioRequestDtoList;
 import com.resume.resu.vo.response.CareerResponseDto;
@@ -34,7 +35,21 @@ public class PortfolioController {
     * */
 
     @PostMapping("/resume/portfolio/{resumeNo}")
-    public ResponseEntity<List<PortfolioResponseDto>> addPortfolio(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute PortfolioRequestDtoList getListDto, HttpServletRequest req){
+    public ResponseEntity<?> addPortfolio(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute PortfolioRequestDtoList getListDto, HttpServletRequest req){
+
+        if(getListDto.getList()==null){
+            log.info("dto가 null입니다.");
+            return ResponseEntity.badRequest().body("dto가 null입니다.");
+
+        }
+
+        for(PortfolioRequestDto dto:getListDto.getList()){
+            if(dto.getTitle()==null|| dto.getLink()==null || dto.getPofolDetail()==null){
+                log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+                return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            }
+        }
+
         String accessToken=jwtUtils.getAcceessToken(req);
 
         // 요청 헤더의 토큰에서 memberNo 가져옴
@@ -67,7 +82,13 @@ public class PortfolioController {
     pofolNo까지 같이 form으로 전달해야함
     TODO : 프론트엔드 작업하면서 수정해야할 경우, 수정 할 것 */
     @PostMapping("/resume/portfolio/update/{resumeNo}")
-    public ResponseEntity<PortfolioResponseDto> updatePortfolio(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute PortfolioRequestDto portfolioRequestDto, HttpServletRequest req){
+    public ResponseEntity<?> updatePortfolio(@PathVariable(name="resumeNo") int resumeNo, @ModelAttribute PortfolioRequestDto portfolioRequestDto, HttpServletRequest req){
+
+        // pofolNo가 비어있을 경우, 아래쪽 포폴 번호가 없음 부분에서 걸림!
+        if(portfolioRequestDto.getTitle()==null|| portfolioRequestDto.getLink()==null || portfolioRequestDto.getPofolDetail()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+        }
 
         String accessToken=jwtUtils.getAcceessToken(req);
 
@@ -93,6 +114,7 @@ public class PortfolioController {
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
                     }
                     // 포폴이 아예 존재하지 않을 때
+                    log.info("포폴 번호가 존재하지 않음!");
                     return ResponseEntity.badRequest().build();
                 }
             }

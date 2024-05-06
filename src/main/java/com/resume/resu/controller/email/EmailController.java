@@ -23,8 +23,11 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/member/email/send")
-    public ResponseEntity<EmailSendResponseDto> sendEmail(@ModelAttribute EmailSendRequestDto emailSendRequestDto){
-
+    public ResponseEntity<?> sendEmail(@ModelAttribute EmailSendRequestDto emailSendRequestDto){
+        if(emailSendRequestDto.getEmail()==null){
+            log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+            return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요!");
+        }
 
         String subject=" RESU 이메일 인증 이메일 입니다.";
         Random random = new Random();
@@ -51,7 +54,13 @@ public class EmailController {
     // 비밀번호 재설정시 이메일을 이용한 본인 인증
     // 이메일은 중복 불가능하기 때문에, 이메일을 클라이언트에게 반환해주어 어떤 계정인지 알 수있도록 함
     @PostMapping("/member/email/authentication")
-    public ResponseEntity<EmailAuthenticationResponseDto> authenticateEmail(@ModelAttribute EmailAuthenticationRequestDto emailAuthenticationRequestDto){
+    public ResponseEntity<?> authenticateEmail(@ModelAttribute EmailAuthenticationRequestDto emailAuthenticationRequestDto){
+       if(emailAuthenticationRequestDto.getName()==null ||
+               emailAuthenticationRequestDto.getBirth()==null ||
+               emailAuthenticationRequestDto.getEmail()==null || emailAuthenticationRequestDto.getCode()==null){
+           log.info("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+           return ResponseEntity.badRequest().body("모든 데이터를 작성해 전송하세요! 빈 데이터 존재함");
+       }
        boolean result =  emailService.authenticateEmail(emailAuthenticationRequestDto);
        if(result){
            EmailAuthenticationResponseDto emailAuthenticationResponseDto=new EmailAuthenticationResponseDto(emailAuthenticationRequestDto.getEmail());
