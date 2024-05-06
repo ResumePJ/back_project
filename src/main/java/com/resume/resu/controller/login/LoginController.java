@@ -49,7 +49,7 @@ public class LoginController {
 
             // 응답 생성
             // ResponseEntity는 제네릭 클래스 (비워두면, 컴파일러가 자동으로 적절한 데이터 타입 추론)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.badRequest().body("로그인 실패");
 
         }
 
