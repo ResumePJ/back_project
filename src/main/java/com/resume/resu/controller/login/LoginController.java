@@ -6,6 +6,7 @@ import com.resume.resu.vo.request.EmailLoginRequestDto;
 import com.resume.resu.vo.response.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,9 +42,14 @@ public class LoginController {
             String jwt = jwtUtils.createAccessToken(member.getEmail(),member.getName(),member.getMemberNo());
             log.info("jwt : {}",jwt);
 
+            //json으로 변환해 반환
+            String json="{\"access_token\":"+"\""+jwt+"\"}";
+            return ResponseEntity.ok(json);
+
+
 
             // resonse body에 담아서 보내는 방법
-               return ResponseEntity.ok(jwt);
+            // return ResponseEntity.ok(jwt);
 
             // response header에 담아서 보내는 방법
             // return ResponseEntity.ok().header("Authorization","Bearer "+jwt).build();
